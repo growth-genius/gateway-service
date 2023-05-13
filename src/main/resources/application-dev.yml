@@ -7,12 +7,15 @@ eureka:
     register-with-eureka: true
 
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://tgather:8761/eureka
 
 
 spring:
   application:
-    name: apigateway-service
+    name: gateway-service
+  profiles:
+    active:
+      on-profile: dev
   cloud:
     gateway:
       routes:
