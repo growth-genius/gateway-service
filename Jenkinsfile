@@ -36,7 +36,6 @@ node {
             sh(script: "docker stop ${IMAGE_NAME} || true")
             sh(script: "docker rm ${IMAGE_NAME} || true")
             sh(script: "docker rmi ${IMAGE_NAME} || true")
-            sh(script:"docker run --network ${DOCKER_NETWORK} -m 3g --env JAVA_OPTS='-Dspring.profiles.active=${SPRING_PROFILE} -Djasypt.encryptor.password=${DJASYPT_PASSWORD} -Dfile.encoding=UTF-8 -Xmx8192m -XX:MaxMetaspaceSize=1024m' --user root -d -e TZ=Asia/Seoul --name ${IMAGE_NAME} ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest")
             sh(script:"docker run --network ${DOCKER_NETWORK} -m 3g --env JAVA_OPTS='-Dspring.profiles.active=${SPRING_PROFILE} -Djasypt.encryptor.password=${DJASYPT_PASSWORD} -Dfile.encoding=UTF-8 -Xmx8192m -XX:MaxMetaspaceSize=1024m' --user root -d -p 8000:8000 -e TZ=Asia/Seoul --name ${IMAGE_NAME} ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest")
         }
 
