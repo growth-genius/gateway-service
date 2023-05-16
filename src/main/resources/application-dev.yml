@@ -19,38 +19,38 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
+        - id: account-service
+          uri: lb://ACCOUNT-SERVICE
           predicates:
-            - Path=/user-service/actuator/**
+            - Path=/account-service/actuator/**
             - Method=POST,GET
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        - id: user-service
-          uri: lb://USER-SERVICE
+            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
+        - id: account-service
+          uri: lb://ACCOUNT-SERVICE
           predicates:
-            - Path=/user-service/account/**
+            - Path=/account-service/account/**
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        - id: user-service
-          uri: lb://USER-SERVICE
+            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
+        - id: account-service
+          uri: lb://ACCOUNT-SERVICE
           predicates:
-            - Path=/user-service/users
+            - Path=/account-service/users
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        - id: user-service
-          uri: lb://USER-SERVICE
+            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
+        - id: account-service
+          uri: lb://ACCOUNT-SERVICE
           predicates:
-            - Path=/user-service/**
+            - Path=/account-service/**
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
             - JwtAuthenticationTokenFilter
 
       default-filters:
