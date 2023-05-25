@@ -15,47 +15,16 @@ spring:
     name: gateway-service
   cloud:
     gateway:
-      routes:
-        - id: account-service
-          uri: lb://ACCOUNT-SERVICE
-          predicates:
-            - Path=/account-service/actuator/**
-            - Method=POST,GET
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
-        - id: account-service
-          uri: lb://ACCOUNT-SERVICE
-          predicates:
-            - Path=/account-service/account/**
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
-        - id: account-service
-          uri: lb://ACCOUNT-SERVICE
-          predicates:
-            - Path=/account-service/users
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
-        - id: account-service
-          uri: lb://ACCOUNT-SERVICE
-          predicates:
-            - Path=/account-service/**
-            - Method=GET
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
-            - JwtAuthenticationTokenFilter
-
-      default-filters:
-        - name: GlobalFilter
-          args:
-            baseMessage: Spring Cloud Gateway Filter
-            preLogger: true
-            postLogger: true
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - http://localhost:3000
+              - http://127.0.0.1:3000
+            allow-credentials: true
+            allowedHeaders: "*"
+            allowedMethods: "*"
 
 management:
   endpoints:

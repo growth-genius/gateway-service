@@ -2,7 +2,7 @@ spring:
   cloud:
     config:
       uri: http://config-service:8888
-      name: ecommerce, common
+      name: ecommerce, common, gateway
   profiles:
     active:
       on-profile: dev

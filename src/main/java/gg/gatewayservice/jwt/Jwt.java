@@ -1,4 +1,4 @@
-package sgyj.gatewayservice.jwt;
+package gg.gatewayservice.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
@@ -10,7 +10,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import sgyj.gatewayservice.config.JwtTokenConfigure;
 
 @Slf4j
 public final class Jwt {

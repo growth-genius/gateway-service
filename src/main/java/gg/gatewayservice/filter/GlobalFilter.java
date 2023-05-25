@@ -1,4 +1,4 @@
-package sgyj.gatewayservice.filter;
+package gg.gatewayservice.filter;
 
 import lombok.Getter;
 import lombok.Setter;

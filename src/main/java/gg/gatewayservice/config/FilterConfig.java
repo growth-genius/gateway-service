@@ -1,10 +1,10 @@
-package sgyj.gatewayservice.config;
+package gg.gatewayservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import sgyj.gatewayservice.jwt.Jwt;
-import sgyj.gatewayservice.jwt.JwtAuthenticationTokenFilter;
+import gg.gatewayservice.jwt.Jwt;
+import gg.gatewayservice.jwt.JwtAuthenticationTokenFilter;
 
 @Configuration
 @RequiredArgsConstructor

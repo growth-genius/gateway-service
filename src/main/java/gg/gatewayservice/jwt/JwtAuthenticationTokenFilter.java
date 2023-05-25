@@ -1,4 +1,4 @@
-package sgyj.gatewayservice.jwt;
+package gg.gatewayservice.jwt;
 
 
 import java.net.URLDecoder;
@@ -31,12 +31,14 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
     public GatewayFilter apply(Config config ){
         return (( exchange, chain ) -> {
             ServerHttpRequest request = exchange.getRequest();
+            log.error("authentication :: {}", request.getHeaders().get(HttpHeaders.AUTHORIZATION));
             if( !request.getHeaders().containsKey( HttpHeaders.AUTHORIZATION )) {
                 return onError(exchange, "no authorization header", HttpStatus.UNAUTHORIZED );
             }
 
             String header = Objects.requireNonNull(request.getHeaders().get(HttpHeaders.AUTHORIZATION)).get( 0 );
             Optional<String> optionalToken = obtainAuthorizationToken(header);
+            log.error("authentication.isPresent :: {}", optionalToken.isPresent());
             if(optionalToken.isEmpty()) {
                 return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
             }
@@ -57,6 +59,7 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
             if (log.isDebugEnabled())
                 log.error("Jwt authorization api detected: {}", token);
             token = URLDecoder.decode(token, StandardCharsets.UTF_8 );
+            // verify(token);
             String[] parts = token.split(" ");
             if (parts.length == 2) {
                 String scheme = parts[0];
