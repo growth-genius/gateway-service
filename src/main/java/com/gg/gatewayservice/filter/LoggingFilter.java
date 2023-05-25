@@ -1,4 +1,4 @@
-package gg.gatewayservice.filter;
+package com.gg.gatewayservice.filter;
 
 import lombok.Getter;
 import lombok.Setter;

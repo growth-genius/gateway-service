@@ -1,4 +1,4 @@
-package gg.gatewayservice.jwt;
+package com.gg.gatewayservice.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;

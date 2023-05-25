@@ -1,4 +1,4 @@
-package gg.gatewayservice.jwt;
+package com.gg.gatewayservice.jwt;
 
 
 import java.net.URLDecoder;
