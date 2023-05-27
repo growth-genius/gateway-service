@@ -1,4 +1,4 @@
-package sgyj.gatewayservice.config;
+package com.gg.gatewayservice.config;
 
 import lombok.Getter;
 import lombok.Setter;

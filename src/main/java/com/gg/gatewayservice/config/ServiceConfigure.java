@@ -1,8 +1,8 @@
-package sgyj.gatewayservice.config;
+package com.gg.gatewayservice.config;
 
+import com.gg.gatewayservice.jwt.Jwt;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import sgyj.gatewayservice.jwt.Jwt;
 
 @Configuration
 public class ServiceConfigure {
