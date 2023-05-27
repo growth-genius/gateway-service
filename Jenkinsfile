@@ -25,7 +25,7 @@ node {
 
         stage("Docker Image tag") {
             try {
-              sh "docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest ."
+              sh "docker build --no-cache -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest ."
 
             }catch (e) {
               print(e)
