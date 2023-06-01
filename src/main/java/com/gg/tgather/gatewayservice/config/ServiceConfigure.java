@@ -1,6 +1,6 @@
-package com.gg.gatewayservice.config;
+package com.gg.tgather.gatewayservice.config;
 
-import com.gg.gatewayservice.jwt.Jwt;
+import com.gg.tgather.gatewayservice.jwt.Jwt;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

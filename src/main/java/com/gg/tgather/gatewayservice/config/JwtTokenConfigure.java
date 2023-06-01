@@ -1,4 +1,4 @@
-package com.gg.gatewayservice.config;
+package com.gg.tgather.gatewayservice.config;
 
 import lombok.Getter;
 import lombok.Setter;

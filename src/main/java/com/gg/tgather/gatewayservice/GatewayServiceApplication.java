@@ -1,4 +1,4 @@
-package com.gg.gatewayservice;
+package com.gg.tgather.gatewayservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
