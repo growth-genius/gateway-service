@@ -1,5 +1,6 @@
 package com.gg.tgather.gatewayservice.handler;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,11 +34,14 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         if (response.isCommitted()) {
             return Mono.error(ex);
         }
-
+        response.setStatusCode(HttpStatus.BAD_REQUEST);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         if (ex instanceof ResponseStatusException) {
             response.setStatusCode(((ResponseStatusException) ex).getStatusCode());
+        } else if( ex instanceof TokenExpiredException) {
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
         }
+
 
         Map<String, String> errorMap = new HashMap<>();
         String statusCode = Objects.requireNonNull(response.getStatusCode()).toString();
