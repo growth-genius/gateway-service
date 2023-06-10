@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringTokenizer;
 
 @Slf4j
 @Order(-1)
@@ -36,19 +37,19 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         }
         response.setStatusCode(HttpStatus.BAD_REQUEST);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        if (ex instanceof ResponseStatusException) {
-            response.setStatusCode(((ResponseStatusException) ex).getStatusCode());
+        if (ex instanceof ResponseStatusException responsestatusexception) {
+            response.setStatusCode(responsestatusexception.getStatusCode());
         } else if( ex instanceof TokenExpiredException) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
         }
 
 
         Map<String, String> errorMap = new HashMap<>();
-        String statusCode = Objects.requireNonNull(response.getStatusCode()).toString();
-        if(statusCode.split(" ").length == 2) {
+        StringTokenizer stringTokenizer = new StringTokenizer(Objects.requireNonNull(response.getStatusCode()).toString(), " ");
+        if(stringTokenizer.hasMoreTokens()) {
             errorMap.put("success", "false");
-            errorMap.put("status", response.getStatusCode().toString().split(" ")[0]);
-            errorMap.put("error_message", response.getStatusCode().toString().split(" ")[1]);
+            errorMap.put("status", stringTokenizer.nextToken());
+            errorMap.put("response", "{}");
             errorMap.put("message", ex.getMessage());
         }
 
