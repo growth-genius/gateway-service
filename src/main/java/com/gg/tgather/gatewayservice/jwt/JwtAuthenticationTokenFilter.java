@@ -54,6 +54,7 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
             } catch (TokenExpiredException e) {
                 ServerHttpResponse response = exchange.getResponse();
                 response.setStatusCode(HttpStatus.FORBIDDEN);
+                log.error(e.getMessage());
                 byte[] bytes = e.getMessage().getBytes(StandardCharsets.UTF_8);
                 DataBuffer buffer = response.bufferFactory().wrap(bytes);
                 response.writeWith(Mono.just(buffer));
