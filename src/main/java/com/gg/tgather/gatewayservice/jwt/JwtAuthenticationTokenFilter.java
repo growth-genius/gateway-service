@@ -6,14 +6,23 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.core.io.buffer.DefaultDataBuffer;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -32,22 +41,32 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
         return (( exchange, chain ) -> {
             ServerHttpRequest request = exchange.getRequest();
 
-            if( !request.getHeaders().containsKey( HttpHeaders.AUTHORIZATION )) return onError(exchange, "no authorization header");
+            if( !request.getHeaders().containsKey( HttpHeaders.AUTHORIZATION )) return onError(exchange, HttpStatus.UNAUTHORIZED, "no authorization header");
 
             List<String> headers = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
 
-            if( headers == null || headers.isEmpty() ) return onError(exchange, "Authentication is not present");
+            if( headers == null || headers.isEmpty() ) return onError(exchange, HttpStatus.UNAUTHORIZED, "Authentication is not present");
 
             Optional<String> optionalToken = obtainAuthorizationToken(headers.get( 0 ));
-            if(optionalToken.isEmpty()) return onError(exchange, "JWT token is not valid");
-            jwt.verify( optionalToken.get() );
+            if(optionalToken.isEmpty()) return onError(exchange, HttpStatus.UNAUTHORIZED, "JWT token is not valid");
+            try {
+                jwt.verify( optionalToken.get() );
+            } catch (TokenExpiredException e) {
+                ServerHttpResponse response = exchange.getResponse();
+                response.setStatusCode(HttpStatus.FORBIDDEN);
+                byte[] bytes = e.getMessage().getBytes(StandardCharsets.UTF_8);
+                DataBuffer buffer = response.bufferFactory().wrap(bytes);
+                response.writeWith(Mono.just(buffer));
+                response.setComplete();
+                return chain.filter(exchange);
+            }
             return chain.filter( exchange );
         });
     }
 
-    private Mono<Void> onError( ServerWebExchange serverWebExchange, String errorMessage ) {
+    private Mono<Void> onError(ServerWebExchange serverWebExchange, HttpStatus httpStatus, String errorMessage ) {
         ServerHttpResponse response = serverWebExchange.getResponse();
-        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        response.setStatusCode(httpStatus);
         return response.setComplete();
     }
 
