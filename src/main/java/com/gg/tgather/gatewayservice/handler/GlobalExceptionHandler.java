@@ -17,10 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringTokenizer;
+import java.util.*;
 
 @Slf4j
 @Order(-1)
@@ -44,12 +41,12 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         }
 
 
-        Map<String, String> errorMap = new HashMap<>();
+        Map<String, Object> errorMap = new HashMap<>();
         StringTokenizer stringTokenizer = new StringTokenizer(Objects.requireNonNull(response.getStatusCode()).toString(), " ");
         if(stringTokenizer.hasMoreTokens()) {
             errorMap.put("success", "false");
             errorMap.put("status", stringTokenizer.nextToken());
-            errorMap.put("response", "{}");
+            errorMap.put("response", new ArrayList<>());
             errorMap.put("message", ex.getMessage());
         }
 
