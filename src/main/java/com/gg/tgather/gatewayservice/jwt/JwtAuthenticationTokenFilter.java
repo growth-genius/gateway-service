@@ -40,6 +40,7 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
 
             Optional<String> optionalToken = obtainAuthorizationToken(headers.get( 0 ));
             if(optionalToken.isEmpty()) return onError(exchange, "JWT token is not valid");
+            jwt.verify( optionalToken.get() );
             return chain.filter( exchange );
         });
     }
@@ -56,7 +57,6 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
             if (log.isDebugEnabled())
                 log.error("Jwt authorization api detected: {}", token);
             token = URLDecoder.decode(token, StandardCharsets.UTF_8 );
-            verify(token);
             String[] parts = token.split(" ");
             if (parts.length == 2) {
                 String scheme = parts[0];
@@ -66,10 +66,6 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
         }
 
         return Optional.empty();
-    }
-
-    private Jwt.Claims verify(String token) {
-        return jwt.verify(token);
     }
 
     public static class Config {
