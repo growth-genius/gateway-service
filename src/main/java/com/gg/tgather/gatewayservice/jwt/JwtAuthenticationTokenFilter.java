@@ -3,7 +3,7 @@ package com.gg.tgather.gatewayservice.jwt;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
@@ -31,25 +31,22 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
     public GatewayFilter apply(Config config ){
         return (( exchange, chain ) -> {
             ServerHttpRequest request = exchange.getRequest();
-            log.error("authentication :: {}", request.getHeaders().get(HttpHeaders.AUTHORIZATION));
-            if( !request.getHeaders().containsKey( HttpHeaders.AUTHORIZATION )) {
-                return onError(exchange, "no authorization header", HttpStatus.UNAUTHORIZED );
-            }
 
-            String header = Objects.requireNonNull(request.getHeaders().get(HttpHeaders.AUTHORIZATION)).get( 0 );
-            Optional<String> optionalToken = obtainAuthorizationToken(header);
-            log.error("authentication.isPresent :: {}", optionalToken.isPresent());
-            if(optionalToken.isEmpty()) {
-                return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
-            }
+            if( !request.getHeaders().containsKey( HttpHeaders.AUTHORIZATION )) return onError(exchange, "no authorization header");
+
+            List<String> headers = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
+
+            if( headers == null || headers.isEmpty() ) return onError(exchange, "Authentication is not present");
+
+            Optional<String> optionalToken = obtainAuthorizationToken(headers.get( 0 ));
+            if(optionalToken.isEmpty()) return onError(exchange, "JWT token is not valid");
             return chain.filter( exchange );
         });
     }
 
-    private Mono<Void> onError( ServerWebExchange serverWebExchange, String errorMessage, HttpStatus httpStatus ) {
+    private Mono<Void> onError( ServerWebExchange serverWebExchange, String errorMessage ) {
         ServerHttpResponse response = serverWebExchange.getResponse();
-        response.setStatusCode( httpStatus );
-        log.error( errorMessage );
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return response.setComplete();
     }
 
@@ -59,7 +56,7 @@ public class JwtAuthenticationTokenFilter extends AbstractGatewayFilterFactory<J
             if (log.isDebugEnabled())
                 log.error("Jwt authorization api detected: {}", token);
             token = URLDecoder.decode(token, StandardCharsets.UTF_8 );
-            // verify(token);
+            verify(token);
             String[] parts = token.split(" ");
             if (parts.length == 2) {
                 String scheme = parts[0];
