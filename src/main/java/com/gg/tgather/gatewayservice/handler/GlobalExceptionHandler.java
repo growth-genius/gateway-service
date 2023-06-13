@@ -44,8 +44,8 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         Map<String, Object> errorMap = new HashMap<>();
         StringTokenizer stringTokenizer = new StringTokenizer(Objects.requireNonNull(response.getStatusCode()).toString(), " ");
         if(stringTokenizer.hasMoreTokens()) {
-            errorMap.put("success", "false");
-            errorMap.put("status", stringTokenizer.nextToken());
+            errorMap.put("success", false);
+            errorMap.put("status", Integer.parseInt(stringTokenizer.nextToken()));
             errorMap.put("response", new ArrayList<>());
             errorMap.put("message", ex.getMessage());
         }
