@@ -23,7 +23,7 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
             var request = exchange.getRequest();
             var response = exchange.getResponse();
             log.info( "Global filter baseMessage: {}", config.getBaseMessage() );
-            if(config.isPostLogger()) log.info( "Global Filter Start: request id -> {}", request.getId() );
+            if(config.isPostLogger()) log.info( "Global Filter Start: request id -> {}, request url -> {}", request.getId(), request.getURI() );
             return chain.filter( exchange ).then( Mono.fromRunnable(() -> {
                 if(config.isPostLogger()) log.info( "Global Filter End: response code -> {}", response.getStatusCode() );
             }));
