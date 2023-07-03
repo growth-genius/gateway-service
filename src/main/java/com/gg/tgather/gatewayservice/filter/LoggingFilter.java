@@ -28,7 +28,7 @@ public class LoggingFilter extends AbstractGatewayFilterFactory<LoggingFilter.Co
             ServerHttpResponse response = exchange.getResponse();
 
             log.info( "Logging Filter baseMessage : {}", config.getBaseMessage() );
-            if (config.isPreLogger()) log.info( "Logging PRE Filter :: request id -> {}", request.getId() );
+            if (config.isPreLogger()) log.info( "Logging PRE Filter :: request id -> {}, request url -> {}", request.getId(), request.getURI() );
 
             return chain.filter( exchange ).then( Mono.fromRunnable( () -> {
                 if ( config.isPostLogger() ) log.info( "Logging POST Filter: response code -> {}", response.getStatusCode() );
