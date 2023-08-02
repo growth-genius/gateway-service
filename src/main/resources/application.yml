@@ -22,6 +22,8 @@ spring:
             allowedOrigins:
               - http://localhost:3000
               - http://127.0.0.1:3000
+              - http://www.tpsg.co.kr:3000
+              - http://www.tpsg.co.kr:8000
             allow-credentials: true
             allowedHeaders: "*"
             allowedMethods: "*"
